@@ -189,8 +189,70 @@ body {
   padding: 20px;
 }
 
+/* Request Board */
+.board-section {
+  min-width: 0;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.column {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  padding: 14px;
+  min-height: 160px;
+}
+
+.column-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.column-head h3 {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.column-count {
+  font-size: 0.75rem;
+  color: var(--muted);
+  background: var(--bg);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.column-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-height: 100px;
+}
+
+.column-list:empty::before {
+  content: "Nothing here";
+  display: block;
+  text-align: center;
+  padding: 25px 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
 @media (max-width: 800px) {
   .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .board {
     grid-template-columns: 1fr;
   }
 }
