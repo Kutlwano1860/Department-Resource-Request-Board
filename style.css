@@ -1,5 +1,196 @@
-/* ResourceHub styles - PM-04 Final Project */
+:root {
+  --radius-s: 6px;
+  --radius-m: 10px;
 
-* { box-sizing: border-box; }
+  --bg: #0a0a0a;
+  --surface: #161414;
+  --line: #322c2c;
+  --text: #f2eeee;
+  --muted: #a99e9e;
 
-body { margin: 0; font-family: Arial, sans-serif; }
+  --red: #d81e2c;
+  --red-bright: #ff3b3b;
+  --red-bg: #2a1213;
+
+  --gold: #d4a53d;
+  --gold-bg: #241c0c;
+
+  --green: #6ea86e;
+  --placeholder: #6b6161;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.topbar {
+  padding: 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar h1 {
+  margin: 0;
+}
+
+.topbar p {
+  margin: 5px 0 0;
+  color: var(--muted);
+}
+
+.layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 25px;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 20px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  padding: 20px;
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+/* Submit button */
+.btn-submit {
+  width: 100%;
+  padding: 11px 0;
+  background: var(--red);
+  color: white;
+  border: none;
+  border-radius: var(--radius-s);
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  background: var(--red-bright);
+}
+
+/* Form */
+.field {
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.field label,
+.field legend {
+  font-size: 0.85rem;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.field input,
+.field select,
+.field textarea {
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: 2px solid var(--red);
+}
+
+.field.invalid input,
+.field.invalid select,
+.field.invalid textarea {
+  border-color: var(--red-bright);
+}
+
+.field-error {
+  font-size: 0.75rem;
+  color: var(--red-bright);
+  min-height: 1.1em;
+  margin-top: 4px;
+}
+
+/* Urgency */
+.urgency-field {
+  border: none;
+  padding: 0;
+}
+
+.urgency-options {
+  display: flex;
+  gap: 10px;
+}
+
+.urgency-pill {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+  background: var(--bg);
+}
+
+.urgency-pill input {
+  position: absolute;
+  opacity: 0;
+}
+
+.urgency-pill:has(input:checked) {
+  border-color: var(--gold);
+  background: var(--gold-bg);
+  color: var(--gold);
+}
+
+.urgency-pill.urgent:has(input:checked) {
+  border-color: var(--red);
+  background: var(--red-bg);
+  color: var(--red-bright);
+}
+
+.form-message {
+  margin-top: 12px;
+  min-height: 20px;
+}
+
+.form-message.success {
+  color: var(--green);
+}
+
+.form-message.error {
+  color: var(--red-bright);
+}
+
+.page-footer {
+  text-align: center;
+  color: var(--muted);
+  padding: 20px;
+}
+
+@media (max-width: 800px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

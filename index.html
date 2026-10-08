@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ResourceHub | PM-04 Final Project</title>
-  <link rel="stylesheet" href="style.css">
+   <link rel="stylesheet" href="style.css">
 </head>
+
 <body data-theme="dark">
 
   <header class="topbar">
@@ -17,7 +19,77 @@
 
     <aside class="card" aria-labelledby="formHeading">
       <h2 id="formHeading">New request</h2>
-      <!-- Request form goes here -->
+
+      <form id="requestForm" novalidate>
+
+        <div class="field">
+          <label for="requesterName">Requester name *</label>
+          <input type="text" id="requesterName" placeholder="e.g. Thandeka Mokoena" autocomplete="off">
+          <span class="field-error" id="err-requesterName"></span>
+        </div>
+
+        <div class="field">
+          <label for="department">Department *</label>
+          <select id="department">
+            <option value="">Select a department</option>
+            <option>Operations</option>
+            <option>Finance</option>
+            <option>IT &amp; Systems</option>
+            <option>Sales</option>
+            <option>Human Resources</option>
+            <option>Customer Support</option>
+          </select>
+          <span class="field-error" id="err-department"></span>
+        </div>
+
+        <div class="field">
+          <label for="resourceType">Resource type *</label>
+          <select id="resourceType">
+            <option value="">Select a resource type</option>
+            <option>Equipment</option>
+            <option>Software access</option>
+            <option>Stationery</option>
+            <option>Training material</option>
+            <option>Meeting support</option>
+          </select>
+          <span class="field-error" id="err-resourceType"></span>
+        </div>
+
+        <div class="field">
+          <label for="description">Description *</label>
+          <textarea id="description" rows="3" placeholder="What do you need and why?"></textarea>
+          <span class="field-error" id="err-description"></span>
+        </div>
+
+        <div class="field">
+          <label for="quantity">Quantity</label>
+          <input type="number" id="quantity" min="1" value="1">
+          <span class="field-error" id="err-quantity"></span>
+        </div>
+
+        <fieldset class="field urgency-field">
+          <legend>Urgency</legend>
+
+          <div class="urgency-options">
+            <label class="urgency-pill">
+              <input type="radio" name="urgency" value="Normal" checked>
+              <span>Normal</span>
+            </label>
+
+            <label class="urgency-pill urgent">
+              <input type="radio" name="urgency" value="Urgent">
+              <span>Urgent</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <button type="submit" class="btn-submit">
+          Submit request
+        </button>
+
+        <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
+
+      </form>
     </aside>
 
     <section class="board-section" aria-labelledby="boardHeading">
@@ -33,4 +105,5 @@
 
   <script src="script.js"></script>
 </body>
+
 </html>
