@@ -6,6 +6,7 @@ const form = document.getElementById("requestForm");
 const formMessage = document.getElementById("formMessage");
 const searchInput = document.getElementById("searchInput");
 const urgencyFilter = document.getElementById("urgencyFilter");
+const exportCsvButton = document.getElementById("exportCsv");
 
 let requests = [];
 let nextId = 1;
@@ -271,7 +272,7 @@ urgencyFilter.addEventListener("change", function () {
     renderBoard();
 });
 
-/* RH-02 test submit */
+/* RH-07a: Submit a new request */
 form.addEventListener("submit", function (event) {
     event.preventDefault();
 
@@ -289,7 +290,12 @@ form.addEventListener("submit", function (event) {
             document.getElementById("description").value,
 
         quantity:
-            document.getElementById("quantity").value
+            document.getElementById("quantity").value,
+
+        urgency:
+            document.querySelector(
+                'input[name="urgency"]:checked'
+            ).value
     };
 
     const errors = validateForm(data);
@@ -306,11 +312,107 @@ form.addEventListener("submit", function (event) {
         return;
     }
 
+    /* RH-07b: Create and save request */
+    const request = {
+        id: formatId(nextId),
+        requesterName: data.requesterName.trim(),
+        department: data.department,
+        resourceType: data.resourceType,
+        description: data.description.trim(),
+        quantity: Number(data.quantity),
+        urgency: data.urgency,
+        status: "Submitted"
+    };
+
+    requests.push(request);
+    nextId++;
+
+    saveRequests();
+    renderBoard();
+
+    /* RH-07c: Reset form */
+    form.reset();
+
+    document.getElementById("quantity").value = 1;
+
     formMessage.textContent =
-        "Form is valid.";
+        "Request submitted successfully.";
 
     formMessage.className =
         "form-message success";
-
-    saveRequests();
 });
+
+/* RH-07d: Export requests to CSV */
+function exportRequestsToCSV() {
+    if (requests.length === 0) {
+        formMessage.textContent =
+            "There are no requests to export.";
+
+        formMessage.className =
+            "form-message error";
+
+        return;
+    }
+
+    const headers = [
+        "ID",
+        "Requester",
+        "Department",
+        "Resource Type",
+        "Description",
+        "Quantity",
+        "Urgency",
+        "Status"
+    ];
+
+    const rows = requests.map(function (request) {
+        return [
+            request.id,
+            request.requesterName,
+            request.department,
+            request.resourceType,
+            request.description,
+            request.quantity,
+            request.urgency,
+            request.status
+        ];
+    });
+
+    const csvRows = [
+        headers,
+        ...rows
+    ];
+
+    const csvContent = csvRows
+        .map(function (row) {
+            return row.map(function (value) {
+                return '"' +
+                    String(value)
+                        .replace(/"/g, '""') +
+                    '"';
+            }).join(",");
+        })
+        .join("\n");
+
+    const blob = new Blob(
+        [csvContent],
+        { type: "text/csv;charset=utf-8;" }
+    );
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "download-report.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+}
+
+exportCsvButton.addEventListener(
+    "click",
+    exportRequestsToCSV
+);
