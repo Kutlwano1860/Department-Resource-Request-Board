@@ -189,8 +189,135 @@ body {
   padding: 20px;
 }
 
+/* Request Board */
+.board-section {
+  min-width: 0;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.column {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  padding: 14px;
+  min-height: 160px;
+}
+
+.column-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.column-head h3 {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.column-count {
+  font-size: 0.75rem;
+  color: var(--muted);
+  background: var(--bg);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.column-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-height: 100px;
+}
+
+.column-list:empty::before {
+  content: "Nothing here";
+  display: block;
+  text-align: center;
+  padding: 25px 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+/* Request Cards */
+.request-card {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.request-card:last-child {
+  margin-bottom: 0;
+}
+
+.request-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.request-card-id {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.request-card-urgency {
+  font-size: 0.7rem;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: var(--gold-bg);
+  color: var(--gold);
+}
+
+.request-card-urgency.urgent {
+  background: var(--red-bg);
+  color: var(--red-bright);
+}
+
+.request-card h4 {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+}
+
+.request-card-details {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 10px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.request-card-details strong {
+  color: var(--text);
+}
+
+.request-card-description {
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
 @media (max-width: 800px) {
   .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .board {
     grid-template-columns: 1fr;
   }
 }

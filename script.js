@@ -83,6 +83,74 @@ function showFieldErrors(errors) {
     });
 }
 
+/* RH-04a: Get requests to display */
+function getVisibleRequests() {
+    return requests;
+}
+
+/* RH-04a: Create request card */
+function renderRequestCard(request) {
+    const card = document.createElement("li");
+
+    card.className = "request-card";
+    card.dataset.id = request.id;
+
+    const urgencyClass =
+        request.urgency === "Urgent"
+            ? "request-card-urgency urgent"
+            : "request-card-urgency";
+
+    card.innerHTML = `
+        <div class="request-card-header">
+            <span class="request-card-id">${request.id}</span>
+            <span class="${urgencyClass}">${request.urgency}</span>
+        </div>
+
+        <h4>${request.resourceType}</h4>
+
+        <div class="request-card-details">
+            <span><strong>Requester:</strong> ${request.requesterName}</span>
+            <span><strong>Department:</strong> ${request.department}</span>
+            <span><strong>Quantity:</strong> ${request.quantity}</span>
+        </div>
+
+        <p class="request-card-description">${request.description}</p>
+    `;
+
+    return card;
+}
+
+/* RH-04b: Render requests on the board */
+function renderBoard() {
+    const visibleRequests = getVisibleRequests();
+
+    const statuses = [
+        "Submitted",
+        "Approved",
+        "Resolved"
+    ];
+
+    statuses.forEach(function (status) {
+        const list = document.getElementById("list-" + status);
+        const column = document.querySelector(
+            '.column[data-status="' + status + '"]'
+        );
+        const count = column.querySelector(".column-count");
+
+        list.innerHTML = "";
+
+        const statusRequests = visibleRequests.filter(function (request) {
+            return request.status === status;
+        });
+
+        statusRequests.forEach(function (request) {
+            list.appendChild(renderRequestCard(request));
+        });
+
+        count.textContent = statusRequests.length;
+    });
+}
+
 /* RH-02 test submit */
 form.addEventListener("submit", function (event) {
     event.preventDefault();
