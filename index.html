@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ResourceHub | PM-04 Final Project</title>
-   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body data-theme="dark">
@@ -94,13 +94,89 @@
 
     <section class="board-section" aria-labelledby="boardHeading">
       <h2 id="boardHeading">Request board</h2>
-      <!-- Stats, filters and board columns go here -->
+
+      <div class="stats">
+
+        <div class="stat-card">
+          <span class="stat-label">Total</span>
+          <strong class="stat-value" id="statTotal">0</strong>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-label">Submitted</span>
+          <strong class="stat-value" id="statSubmitted">0</strong>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-label">Approved</span>
+          <strong class="stat-value" id="statApproved">0</strong>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-label">Resolved</span>
+          <strong class="stat-value" id="statResolved">0</strong>
+        </div>
+
+      </div>
+
+      <div class="board-controls">
+
+        <div class="search-box">
+          <label for="searchInput">Search requests</label>
+          <input
+            type="search"
+            id="searchInput"
+            placeholder="Search by requester, resource or description"
+          >
+        </div>
+
+        <div class="filter-box">
+          <label for="urgencyFilter">Urgency</label>
+          <select id="urgencyFilter">
+            <option value="all">All</option>
+            <option value="Normal">Normal</option>
+            <option value="Urgent">Urgent</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="board">
+
+        <div class="column" data-status="Submitted">
+          <div class="column-head">
+            <h3>Submitted</h3>
+            <span class="column-count">0</span>
+          </div>
+
+          <ul class="column-list" id="list-Submitted"></ul>
+        </div>
+
+        <div class="column" data-status="Approved">
+          <div class="column-head">
+            <h3>Approved</h3>
+            <span class="column-count">0</span>
+          </div>
+
+          <ul class="column-list" id="list-Approved"></ul>
+        </div>
+
+        <div class="column" data-status="Resolved">
+          <div class="column-head">
+            <h3>Resolved</h3>
+            <span class="column-count">0</span>
+          </div>
+
+          <ul class="column-list" id="list-Resolved"></ul>
+        </div>
+
+      </div>
     </section>
 
   </main>
 
   <footer class="page-footer">
-    <p>PM-04 Final Project &mdash; ResourceHub &mdash; HTML, CSS and vanilla JavaScript</p>
+    <p>PM-04 Final Project &mdash; ResourceHub &mdash; HTML, CSS and JavaScript</p>
   </footer>
 
   <script src="script.js"></script>
