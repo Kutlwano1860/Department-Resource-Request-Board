@@ -6,11 +6,13 @@ const form = document.getElementById("requestForm");
 const formMessage = document.getElementById("formMessage");
 const searchInput = document.getElementById("searchInput");
 const urgencyFilter = document.getElementById("urgencyFilter");
+const exportCsvButton = document.getElementById("exportCsv");
 
 let requests = [];
 let nextId = 1;
 let searchTerm = "";
 let urgencyValue = "all";
+let draggedRequestId = null;
 
 function loadRequests() {
     const saved = localStorage.getItem("resourceHubRequests");
@@ -112,6 +114,7 @@ function renderRequestCard(request) {
 
     card.className = "request-card";
     card.dataset.id = request.id;
+    card.draggable = true;
 
     const urgencyClass =
         request.urgency === "Urgent"
@@ -135,6 +138,22 @@ function renderRequestCard(request) {
         <p class="request-card-description">${request.description}</p>
     `;
 
+    /* RH-06b: Start dragging a request */
+    card.addEventListener("dragstart", function () {
+        draggedRequestId = request.id;
+        card.classList.add("dragging");
+    });
+
+    /* RH-06b: Finish dragging a request */
+    card.addEventListener("dragend", function () {
+        draggedRequestId = null;
+        card.classList.remove("dragging");
+
+        document.querySelectorAll(".column").forEach(function (column) {
+            column.classList.remove("drag-over");
+        });
+    });
+
     return card;
 }
 
@@ -157,6 +176,22 @@ function updateStats() {
         requests.filter(function (request) {
             return request.status === "Resolved";
         }).length;
+}
+
+/* RH-06a: Update request status */
+function updateRequestStatus(requestId, newStatus) {
+    const request = requests.find(function (item) {
+        return item.id === requestId;
+    });
+
+    if (!request) {
+        return;
+    }
+
+    request.status = newStatus;
+
+    saveRequests();
+    renderBoard();
 }
 
 /* RH-04: Render requests on the board */
@@ -192,6 +227,39 @@ function renderBoard() {
     updateStats();
 }
 
+/* RH-06b: Allow requests to be dropped into columns */
+document.querySelectorAll(".column").forEach(function (column) {
+
+    column.addEventListener("dragover", function (event) {
+        event.preventDefault();
+
+        column.classList.add("drag-over");
+    });
+
+    column.addEventListener("dragleave", function () {
+        column.classList.remove("drag-over");
+    });
+
+    column.addEventListener("drop", function (event) {
+        event.preventDefault();
+
+        column.classList.remove("drag-over");
+
+        if (!draggedRequestId) {
+            return;
+        }
+
+        const newStatus = column.dataset.status;
+
+        updateRequestStatus(
+            draggedRequestId,
+            newStatus
+        );
+
+        draggedRequestId = null;
+    });
+});
+
 /* RH-05b: Search requests */
 searchInput.addEventListener("input", function () {
     searchTerm = searchInput.value.trim();
@@ -204,7 +272,7 @@ urgencyFilter.addEventListener("change", function () {
     renderBoard();
 });
 
-/* RH-02 test submit */
+/* RH-07a: Submit a new request */
 form.addEventListener("submit", function (event) {
     event.preventDefault();
 
@@ -222,7 +290,12 @@ form.addEventListener("submit", function (event) {
             document.getElementById("description").value,
 
         quantity:
-            document.getElementById("quantity").value
+            document.getElementById("quantity").value,
+
+        urgency:
+            document.querySelector(
+                'input[name="urgency"]:checked'
+            ).value
     };
 
     const errors = validateForm(data);
@@ -239,11 +312,107 @@ form.addEventListener("submit", function (event) {
         return;
     }
 
+    /* RH-07b: Create and save request */
+    const request = {
+        id: formatId(nextId),
+        requesterName: data.requesterName.trim(),
+        department: data.department,
+        resourceType: data.resourceType,
+        description: data.description.trim(),
+        quantity: Number(data.quantity),
+        urgency: data.urgency,
+        status: "Submitted"
+    };
+
+    requests.push(request);
+    nextId++;
+
+    saveRequests();
+    renderBoard();
+
+    /* RH-07c: Reset form */
+    form.reset();
+
+    document.getElementById("quantity").value = 1;
+
     formMessage.textContent =
-        "Form is valid.";
+        "Request submitted successfully.";
 
     formMessage.className =
         "form-message success";
-
-    saveRequests();
 });
+
+/* RH-07d: Export requests to CSV */
+function exportRequestsToCSV() {
+    if (requests.length === 0) {
+        formMessage.textContent =
+            "There are no requests to export.";
+
+        formMessage.className =
+            "form-message error";
+
+        return;
+    }
+
+    const headers = [
+        "ID",
+        "Requester",
+        "Department",
+        "Resource Type",
+        "Description",
+        "Quantity",
+        "Urgency",
+        "Status"
+    ];
+
+    const rows = requests.map(function (request) {
+        return [
+            request.id,
+            request.requesterName,
+            request.department,
+            request.resourceType,
+            request.description,
+            request.quantity,
+            request.urgency,
+            request.status
+        ];
+    });
+
+    const csvRows = [
+        headers,
+        ...rows
+    ];
+
+    const csvContent = csvRows
+        .map(function (row) {
+            return row.map(function (value) {
+                return '"' +
+                    String(value)
+                        .replace(/"/g, '""') +
+                    '"';
+            }).join(",");
+        })
+        .join("\n");
+
+    const blob = new Blob(
+        [csvContent],
+        { type: "text/csv;charset=utf-8;" }
+    );
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "download-report.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+}
+
+exportCsvButton.addEventListener(
+    "click",
+    exportRequestsToCSV
+);
