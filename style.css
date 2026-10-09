@@ -272,6 +272,11 @@ body {
   min-height: 160px;
 }
 
+.column.drag-over {
+  border-color: var(--red);
+  background: var(--red-bg);
+}
+
 .column-head {
   display: flex;
   align-items: center;
@@ -317,6 +322,15 @@ body {
   border-radius: var(--radius-s);
   padding: 12px;
   margin-bottom: 10px;
+  cursor: grab;
+}
+
+.request-card:active {
+  cursor: grabbing;
+}
+
+.request-card.dragging {
+  opacity: 0.5;
 }
 
 .request-card:last-child {
