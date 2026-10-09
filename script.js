@@ -11,6 +11,7 @@ let requests = [];
 let nextId = 1;
 let searchTerm = "";
 let urgencyValue = "all";
+let draggedRequestId = null;
 
 function loadRequests() {
     const saved = localStorage.getItem("resourceHubRequests");
@@ -112,6 +113,7 @@ function renderRequestCard(request) {
 
     card.className = "request-card";
     card.dataset.id = request.id;
+    card.draggable = true;
 
     const urgencyClass =
         request.urgency === "Urgent"
@@ -135,6 +137,22 @@ function renderRequestCard(request) {
         <p class="request-card-description">${request.description}</p>
     `;
 
+    /* RH-06b: Start dragging a request */
+    card.addEventListener("dragstart", function () {
+        draggedRequestId = request.id;
+        card.classList.add("dragging");
+    });
+
+    /* RH-06b: Finish dragging a request */
+    card.addEventListener("dragend", function () {
+        draggedRequestId = null;
+        card.classList.remove("dragging");
+
+        document.querySelectorAll(".column").forEach(function (column) {
+            column.classList.remove("drag-over");
+        });
+    });
+
     return card;
 }
 
@@ -157,6 +175,22 @@ function updateStats() {
         requests.filter(function (request) {
             return request.status === "Resolved";
         }).length;
+}
+
+/* RH-06a: Update request status */
+function updateRequestStatus(requestId, newStatus) {
+    const request = requests.find(function (item) {
+        return item.id === requestId;
+    });
+
+    if (!request) {
+        return;
+    }
+
+    request.status = newStatus;
+
+    saveRequests();
+    renderBoard();
 }
 
 /* RH-04: Render requests on the board */
@@ -191,6 +225,39 @@ function renderBoard() {
 
     updateStats();
 }
+
+/* RH-06b: Allow requests to be dropped into columns */
+document.querySelectorAll(".column").forEach(function (column) {
+
+    column.addEventListener("dragover", function (event) {
+        event.preventDefault();
+
+        column.classList.add("drag-over");
+    });
+
+    column.addEventListener("dragleave", function () {
+        column.classList.remove("drag-over");
+    });
+
+    column.addEventListener("drop", function (event) {
+        event.preventDefault();
+
+        column.classList.remove("drag-over");
+
+        if (!draggedRequestId) {
+            return;
+        }
+
+        const newStatus = column.dataset.status;
+
+        updateRequestStatus(
+            draggedRequestId,
+            newStatus
+        );
+
+        draggedRequestId = null;
+    });
+});
 
 /* RH-05b: Search requests */
 searchInput.addEventListener("input", function () {
