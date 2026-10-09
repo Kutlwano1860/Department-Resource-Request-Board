@@ -106,4 +106,188 @@
   <script src="script.js"></script>
 </body>
 
+</html><!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResourceHub | PM-04 Final Project</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body data-theme="dark">
+
+  <header class="topbar">
+    <h1>ResourceHub</h1>
+    <p>Department resource request board</p>
+  </header>
+
+  <main class="layout">
+
+    <aside class="card" aria-labelledby="formHeading">
+      <h2 id="formHeading">New request</h2>
+
+      <form id="requestForm" novalidate>
+
+        <div class="field">
+          <label for="requesterName">Requester name *</label>
+          <input type="text" id="requesterName" placeholder="e.g. Thandeka Mokoena" autocomplete="off">
+          <span class="field-error" id="err-requesterName"></span>
+        </div>
+
+        <div class="field">
+          <label for="department">Department *</label>
+          <select id="department">
+            <option value="">Select a department</option>
+            <option>Operations</option>
+            <option>Finance</option>
+            <option>IT &amp; Systems</option>
+            <option>Sales</option>
+            <option>Human Resources</option>
+            <option>Customer Support</option>
+          </select>
+          <span class="field-error" id="err-department"></span>
+        </div>
+
+        <div class="field">
+          <label for="resourceType">Resource type *</label>
+          <select id="resourceType">
+            <option value="">Select a resource type</option>
+            <option>Equipment</option>
+            <option>Software access</option>
+            <option>Stationery</option>
+            <option>Training material</option>
+            <option>Meeting support</option>
+          </select>
+          <span class="field-error" id="err-resourceType"></span>
+        </div>
+
+        <div class="field">
+          <label for="description">Description *</label>
+          <textarea id="description" rows="3" placeholder="What do you need and why?"></textarea>
+          <span class="field-error" id="err-description"></span>
+        </div>
+
+        <div class="field">
+          <label for="quantity">Quantity</label>
+          <input type="number" id="quantity" min="1" value="1">
+          <span class="field-error" id="err-quantity"></span>
+        </div>
+
+        <fieldset class="field urgency-field">
+          <legend>Urgency</legend>
+
+          <div class="urgency-options">
+            <label class="urgency-pill">
+              <input type="radio" name="urgency" value="Normal" checked>
+              <span>Normal</span>
+            </label>
+
+            <label class="urgency-pill urgent">
+              <input type="radio" name="urgency" value="Urgent">
+              <span>Urgent</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <button type="submit" class="btn-submit">
+          Submit request
+        </button>
+
+        <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
+
+      </form>
+    </aside>
+
+    <section class="board-section" aria-labelledby="boardHeading">
+      <h2 id="boardHeading">Request board</h2>
+
+      <div class="stats">
+
+        <div class="stat-card">
+          <span class="stat-label">Total</span>
+          <strong class="stat-value" id="statTotal">0</strong>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-label">Submitted</span>
+          <strong class="stat-value" id="statSubmitted">0</strong>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-label">Approved</span>
+          <strong class="stat-value" id="statApproved">0</strong>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-label">Resolved</span>
+          <strong class="stat-value" id="statResolved">0</strong>
+        </div>
+
+      </div>
+
+      <div class="board-controls">
+
+        <div class="search-box">
+          <label for="searchInput">Search requests</label>
+          <input
+            type="search"
+            id="searchInput"
+            placeholder="Search by requester, resource or description"
+          >
+        </div>
+
+        <div class="filter-box">
+          <label for="urgencyFilter">Urgency</label>
+          <select id="urgencyFilter">
+            <option value="all">All</option>
+            <option value="Normal">Normal</option>
+            <option value="Urgent">Urgent</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="board">
+
+        <div class="column" data-status="Submitted">
+          <div class="column-head">
+            <h3>Submitted</h3>
+            <span class="column-count">0</span>
+          </div>
+
+          <ul class="column-list" id="list-Submitted"></ul>
+        </div>
+
+        <div class="column" data-status="Approved">
+          <div class="column-head">
+            <h3>Approved</h3>
+            <span class="column-count">0</span>
+          </div>
+
+          <ul class="column-list" id="list-Approved"></ul>
+        </div>
+
+        <div class="column" data-status="Resolved">
+          <div class="column-head">
+            <h3>Resolved</h3>
+            <span class="column-count">0</span>
+          </div>
+
+          <ul class="column-list" id="list-Resolved"></ul>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="page-footer">
+    <p>PM-04 Final Project &mdash; ResourceHub &mdash; HTML, CSS and JavaScript</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+
 </html>
