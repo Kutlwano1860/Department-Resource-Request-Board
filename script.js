@@ -7,6 +7,7 @@ const formMessage = document.getElementById("formMessage");
 const searchInput = document.getElementById("searchInput");
 const urgencyFilter = document.getElementById("urgencyFilter");
 const exportCsvButton = document.getElementById("exportCsv");
+const themeToggle = document.getElementById("themeToggle");
 
 let requests = [];
 let nextId = 1;
@@ -18,9 +19,14 @@ function loadRequests() {
     const saved = localStorage.getItem("resourceHubRequests");
 
     if (saved) {
-        const parsed = JSON.parse(saved);
-        requests = parsed.records;
-        nextId = parsed.nextId;
+        try {
+            const parsed = JSON.parse(saved);
+            requests = parsed.records || [];
+            nextId = parsed.nextId || 1;
+        } catch (error) {
+            requests = [];
+            nextId = 1;
+        }
     }
 }
 
@@ -84,7 +90,6 @@ function showFieldErrors(errors) {
         "description",
         "quantity"
     ].forEach(function (id) {
-
         const field = document
             .getElementById(id)
             .closest(".field");
@@ -102,7 +107,6 @@ function showFieldErrors(errors) {
 /* RH-04: Get requests to display */
 function getVisibleRequests() {
     return requests.filter(function (request) {
-
         const searchableText = (
             request.requesterName + " " +
             request.resourceType + " " +
@@ -245,10 +249,8 @@ function renderBoard() {
 
 /* RH-06b: Allow requests to be dropped into columns */
 document.querySelectorAll(".column").forEach(function (column) {
-
     column.addEventListener("dragover", function (event) {
         event.preventDefault();
-
         column.classList.add("drag-over");
     });
 
@@ -258,7 +260,6 @@ document.querySelectorAll(".column").forEach(function (column) {
 
     column.addEventListener("drop", function (event) {
         event.preventDefault();
-
         column.classList.remove("drag-over");
 
         if (!draggedRequestId) {
@@ -351,6 +352,8 @@ form.addEventListener("submit", function (event) {
 
     document.getElementById("quantity").value = 1;
 
+    showFieldErrors({});
+
     formMessage.textContent =
         "Request submitted successfully.";
 
@@ -421,6 +424,7 @@ function exportRequestsToCSV() {
 
     link.href = url;
     link.download = "download-report.csv";
+
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -432,3 +436,61 @@ exportCsvButton.addEventListener(
     "click",
     exportRequestsToCSV
 );
+
+/* RH-08a: Toggle theme */
+function toggleTheme() {
+    const currentTheme =
+        document.body.getAttribute("data-theme");
+
+    const newTheme =
+        currentTheme === "dark"
+            ? "light"
+            : "dark";
+
+    document.body.setAttribute(
+        "data-theme",
+        newTheme
+    );
+
+    localStorage.setItem(
+        "resourceHubTheme",
+        newTheme
+    );
+
+    updateThemeButton(newTheme);
+}
+
+/* RH-08b: Update theme button */
+function updateThemeButton(theme) {
+    themeToggle.textContent =
+        theme === "dark"
+            ? "Light mode"
+            : "Dark mode";
+}
+
+/* RH-08c: Load saved theme */
+function loadTheme() {
+    const savedTheme =
+        localStorage.getItem("resourceHubTheme") || "dark";
+
+    document.body.setAttribute(
+        "data-theme",
+        savedTheme
+    );
+
+    updateThemeButton(savedTheme);
+}
+
+themeToggle.addEventListener(
+    "click",
+    toggleTheme
+);
+
+/* RH-08d: Start application */
+function startApp() {
+    loadTheme();
+    loadRequests();
+    renderBoard();
+}
+
+startApp();
