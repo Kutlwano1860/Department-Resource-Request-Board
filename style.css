@@ -19,6 +19,24 @@
   --placeholder: #6b6161;
 }
 
+body[data-theme="light"] {
+  --bg: #f4f1f1;
+  --surface: #ffffff;
+  --line: #d8d0d0;
+  --text: #211d1d;
+  --muted: #716868;
+
+  --red: #d81e2c;
+  --red-bright: #c71927;
+  --red-bg: #fde9eb;
+
+  --gold: #a97800;
+  --gold-bg: #fff5d9;
+
+  --green: #3f7d3f;
+  --placeholder: #918686;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -47,6 +65,29 @@ body {
 .topbar p {
   margin: 5px 0 0;
   color: var(--muted);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Theme Toggle */
+.btn-theme {
+  padding: 9px 14px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+  font-size: 0.85rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-theme:hover {
+  border-color: var(--gold);
+  color: var(--gold);
 }
 
 .layout {
@@ -422,9 +463,42 @@ body {
   color: var(--muted);
 }
 
+.request-card-status {
+    display: inline-block;
+    margin: 8px 0;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-submitted {
+    background-color: #53524f;
+    color: #ff0c0c;
+}
+
+.status-approved {
+    background-color: #3b413d;
+    color: #23ff1c;
+}
+
+.status-resolved {
+    background-color: #444747;
+    color: #13dcff;
+}
+
 @media (max-width: 800px) {
   .layout {
     grid-template-columns: 1fr;
+  }
+
+  .topbar {
+    align-items: flex-start;
+  }
+
+  .topbar-actions {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .stats {

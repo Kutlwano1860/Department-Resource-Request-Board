@@ -41,8 +41,20 @@ function formatId(id) {
 function validateForm(data) {
     const errors = {};
 
-    if (!data.requesterName.trim()) {
+    const requesterName = data.requesterName.trim();
+    const nameParts = requesterName.split(/\s+/);
+
+    if (!requesterName) {
         errors.requesterName = "Enter the requester's name.";
+    } else if (/^[0-9\s]+$/.test(requesterName)) {
+        errors.requesterName = "Numbers are not allowed. Please enter your real name.";
+    } else if (
+        !/^[a-zA-Z]+(?:[ '-][a-zA-Z]+)*$/.test(requesterName) ||
+        nameParts.some(function (part) {
+            return part.length < 2;
+        })
+    ) {
+        errors.requesterName = "Enter a valid name with at least two letters per name. Do not use numbers.";
     }
 
     if (!data.department) {
@@ -126,6 +138,10 @@ function renderRequestCard(request) {
             <span class="request-card-id">${request.id}</span>
             <span class="${urgencyClass}">${request.urgency}</span>
         </div>
+
+        <span class="request-card-status status-${request.status.toLowerCase()}">
+            Status: ${request.status}
+        </span>
 
         <h4>${request.resourceType}</h4>
 

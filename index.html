@@ -11,8 +11,20 @@
 <body data-theme="dark">
 
   <header class="topbar">
-    <h1>ResourceHub</h1>
-    <p>Department resource request board</p>
+    <div>
+      <h1>ResourceHub</h1>
+      <p>Department resource request board</p>
+    </div>
+
+    <div class="topbar-actions">
+      <button type="button" class="btn-theme" id="themeToggle">
+        Light mode
+      </button>
+
+      <button type="button" class="btn-export" id="exportCsv">
+        Download Report
+      </button>
+    </div>
   </header>
 
   <main class="layout">
@@ -182,7 +194,7 @@
   </main>
 
   <footer class="page-footer">
-    <p>PM-04 Final Project &mdash; ResourceHub &mdash; HTML, CSS and vanilla JavaScript</p>
+    <p>PM-04 Final Project &mdash; ResourceHub &mdash; HTML, CSS and  JavaScript</p>
   </footer>
 
   <script src="script.js"></script>
