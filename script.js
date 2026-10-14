@@ -7,7 +7,6 @@ const formMessage = document.getElementById("formMessage");
 const searchInput = document.getElementById("searchInput");
 const urgencyFilter = document.getElementById("urgencyFilter");
 const exportCsvButton = document.getElementById("exportCsv");
-const themeToggle = document.getElementById("themeToggle");
 
 let requests = [];
 let nextId = 1;
@@ -422,7 +421,6 @@ function exportRequestsToCSV() {
 
     link.href = url;
     link.download = "download-report.csv";
-
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -430,65 +428,7 @@ function exportRequestsToCSV() {
     URL.revokeObjectURL(url);
 }
 
-/* RH-08a: Toggle theme */
-function toggleTheme() {
-    const currentTheme =
-        document.body.getAttribute("data-theme");
-
-    const newTheme =
-        currentTheme === "dark"
-            ? "light"
-            : "dark";
-
-    document.body.setAttribute(
-        "data-theme",
-        newTheme
-    );
-
-    localStorage.setItem(
-        "resourceHubTheme",
-        newTheme
-    );
-
-    updateThemeButton(newTheme);
-}
-
-/* RH-08b: Update theme button */
-function updateThemeButton(theme) {
-    themeToggle.textContent =
-        theme === "dark"
-            ? "Light mode"
-            : "Dark mode";
-}
-
-/* RH-08b: Load saved theme */
-function loadTheme() {
-    const savedTheme =
-        localStorage.getItem("resourceHubTheme") || "dark";
-
-    document.body.setAttribute(
-        "data-theme",
-        savedTheme
-    );
-
-    updateThemeButton(savedTheme);
-}
-
-/* RH-08c: Start application */
-function startApp() {
-    loadTheme();
-    loadRequests();
-    renderBoard();
-}
-
 exportCsvButton.addEventListener(
     "click",
     exportRequestsToCSV
 );
-
-themeToggle.addEventListener(
-    "click",
-    toggleTheme
-);
-
-startApp();

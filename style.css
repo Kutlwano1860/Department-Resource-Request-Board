@@ -303,6 +303,12 @@ body {
 }
 
 /* CSV Export */
+.export-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
 .btn-export {
   padding: 9px 14px;
   background: var(--surface);
@@ -317,6 +323,12 @@ body {
 .btn-export:hover {
   border-color: var(--gold);
   color: var(--gold);
+}
+
+@media (max-width: 800px) {
+  .topbar {
+    align-items: flex-start;
+  }
 }
 
 .board {
