@@ -6,6 +6,8 @@ const form = document.getElementById("requestForm");
 const formMessage = document.getElementById("formMessage");
 const searchInput = document.getElementById("searchInput");
 const urgencyFilter = document.getElementById("urgencyFilter");
+const exportCsvButton = document.getElementById("exportCsv");
+const themeToggle = document.getElementById("themeToggle");
 
 let requests = [];
 let nextId = 1;
@@ -40,8 +42,20 @@ function formatId(id) {
 function validateForm(data) {
     const errors = {};
 
-    if (!data.requesterName.trim()) {
+    const requesterName = data.requesterName.trim();
+    const nameParts = requesterName.split(/\s+/);
+
+    if (!requesterName) {
         errors.requesterName = "Enter the requester's name.";
+    } else if (/^[0-9\s]+$/.test(requesterName)) {
+        errors.requesterName = "Numbers are not allowed. Please enter your real name.";
+    } else if (
+        !/^[a-zA-Z]+(?:[ '-][a-zA-Z]+)*$/.test(requesterName) ||
+        nameParts.some(function (part) {
+            return part.length < 2;
+        })
+    ) {
+        errors.requesterName = "Enter a valid name with at least two letters per name. Do not use numbers.";
     }
 
     if (!data.department) {
@@ -125,6 +139,10 @@ function renderRequestCard(request) {
             <span class="request-card-id">${request.id}</span>
             <span class="${urgencyClass}">${request.urgency}</span>
         </div>
+
+        <span class="request-card-status status-${request.status.toLowerCase()}">
+            Status: ${request.status}
+        </span>
 
         <h4>${request.resourceType}</h4>
 
@@ -271,7 +289,7 @@ urgencyFilter.addEventListener("change", function () {
     renderBoard();
 });
 
-/* RH-02 test submit */
+/* RH-07a: Submit a new request */
 form.addEventListener("submit", function (event) {
     event.preventDefault();
 
@@ -289,7 +307,12 @@ form.addEventListener("submit", function (event) {
             document.getElementById("description").value,
 
         quantity:
-            document.getElementById("quantity").value
+            document.getElementById("quantity").value,
+
+        urgency:
+            document.querySelector(
+                'input[name="urgency"]:checked'
+            ).value
     };
 
     const errors = validateForm(data);
@@ -306,11 +329,166 @@ form.addEventListener("submit", function (event) {
         return;
     }
 
+    /* RH-07b: Create and save request */
+    const request = {
+        id: formatId(nextId),
+        requesterName: data.requesterName.trim(),
+        department: data.department,
+        resourceType: data.resourceType,
+        description: data.description.trim(),
+        quantity: Number(data.quantity),
+        urgency: data.urgency,
+        status: "Submitted"
+    };
+
+    requests.push(request);
+    nextId++;
+
+    saveRequests();
+    renderBoard();
+
+    /* RH-07c: Reset form */
+    form.reset();
+
+    document.getElementById("quantity").value = 1;
+
     formMessage.textContent =
-        "Form is valid.";
+        "Request submitted successfully.";
 
     formMessage.className =
         "form-message success";
-
-    saveRequests();
 });
+
+/* RH-07d: Export requests to CSV */
+function exportRequestsToCSV() {
+    if (requests.length === 0) {
+        formMessage.textContent =
+            "There are no requests to export.";
+
+        formMessage.className =
+            "form-message error";
+
+        return;
+    }
+
+    const headers = [
+        "ID",
+        "Requester",
+        "Department",
+        "Resource Type",
+        "Description",
+        "Quantity",
+        "Urgency",
+        "Status"
+    ];
+
+    const rows = requests.map(function (request) {
+        return [
+            request.id,
+            request.requesterName,
+            request.department,
+            request.resourceType,
+            request.description,
+            request.quantity,
+            request.urgency,
+            request.status
+        ];
+    });
+
+    const csvRows = [
+        headers,
+        ...rows
+    ];
+
+    const csvContent = csvRows
+        .map(function (row) {
+            return row.map(function (value) {
+                return '"' +
+                    String(value)
+                        .replace(/"/g, '""') +
+                    '"';
+            }).join(",");
+        })
+        .join("\n");
+
+    const blob = new Blob(
+        [csvContent],
+        { type: "text/csv;charset=utf-8;" }
+    );
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "download-report.csv";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+}
+
+/* RH-08a: Toggle theme */
+function toggleTheme() {
+    const currentTheme =
+        document.body.getAttribute("data-theme");
+
+    const newTheme =
+        currentTheme === "dark"
+            ? "light"
+            : "dark";
+
+    document.body.setAttribute(
+        "data-theme",
+        newTheme
+    );
+
+    localStorage.setItem(
+        "resourceHubTheme",
+        newTheme
+    );
+
+    updateThemeButton(newTheme);
+}
+
+/* RH-08b: Update theme button */
+function updateThemeButton(theme) {
+    themeToggle.textContent =
+        theme === "dark"
+            ? "Light mode"
+            : "Dark mode";
+}
+
+/* RH-08b: Load saved theme */
+function loadTheme() {
+    const savedTheme =
+        localStorage.getItem("resourceHubTheme") || "dark";
+
+    document.body.setAttribute(
+        "data-theme",
+        savedTheme
+    );
+
+    updateThemeButton(savedTheme);
+}
+
+/* RH-08c: Start application */
+function startApp() {
+    loadTheme();
+    loadRequests();
+    renderBoard();
+}
+
+exportCsvButton.addEventListener(
+    "click",
+    exportRequestsToCSV
+);
+
+themeToggle.addEventListener(
+    "click",
+    toggleTheme
+);
+
+startApp();
