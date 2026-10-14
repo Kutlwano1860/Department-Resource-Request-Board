@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,7 +37,8 @@
 
         <div class="field">
           <label for="requesterName">Requester name *</label>
-          <input type="text" id="requesterName" placeholder="e.g. Thandeka Mokoena" autocomplete="off">
+          <input type="text" id="requesterName"
+            placeholder="e.g. Thandeka Mokoena" autocomplete="off">
           <span class="field-error" id="err-requesterName"></span>
         </div>
 
@@ -69,7 +71,8 @@
 
         <div class="field">
           <label for="description">Description *</label>
-          <textarea id="description" rows="3" placeholder="What do you need and why?"></textarea>
+          <textarea id="description" rows="3"
+            placeholder="What do you need and why?"></textarea>
           <span class="field-error" id="err-description"></span>
         </div>
 
@@ -99,7 +102,8 @@
           Submit request
         </button>
 
-        <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
+        <p class="form-message" id="formMessage"
+          role="status" aria-live="polite"></p>
 
       </form>
     </aside>
@@ -108,7 +112,6 @@
       <h2 id="boardHeading">Request board</h2>
 
       <div class="stats">
-
         <div class="stat-card">
           <span class="stat-label">Total</span>
           <strong class="stat-value" id="statTotal">0</strong>
@@ -128,18 +131,13 @@
           <span class="stat-label">Resolved</span>
           <strong class="stat-value" id="statResolved">0</strong>
         </div>
-
       </div>
 
       <div class="board-controls">
-
         <div class="search-box">
           <label for="searchInput">Search requests</label>
-          <input
-            type="search"
-            id="searchInput"
-            placeholder="Search by requester, resource or description"
-          >
+          <input type="search" id="searchInput"
+            placeholder="Search by requester, resource or description">
         </div>
 
         <div class="filter-box">
@@ -150,7 +148,6 @@
             <option value="Urgent">Urgent</option>
           </select>
         </div>
-
       </div>
 
       <div class="board">
@@ -160,7 +157,6 @@
             <h3>Submitted</h3>
             <span class="column-count">0</span>
           </div>
-
           <ul class="column-list" id="list-Submitted"></ul>
         </div>
 
@@ -169,7 +165,6 @@
             <h3>Approved</h3>
             <span class="column-count">0</span>
           </div>
-
           <ul class="column-list" id="list-Approved"></ul>
         </div>
 
@@ -178,7 +173,6 @@
             <h3>Resolved</h3>
             <span class="column-count">0</span>
           </div>
-
           <ul class="column-list" id="list-Resolved"></ul>
         </div>
 
@@ -188,10 +182,29 @@
   </main>
 
   <footer class="page-footer">
-    <p>PM-04 Final Project &mdash; ResourceHub &mdash; HTML, CSS and  JavaScript</p>
+    <p>PM-04 Final Project — ResourceHub — HTML, CSS and JavaScript</p>
   </footer>
+
+  <!-- Notification Modal -->
+  <div id="notificationModal" class="modal-overlay"
+    role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+
+    <div class="modal-box">
+      <button type="button" id="modalClose"
+        class="modal-close" aria-label="Close">&times;</button>
+
+      <div id="modalIcon" class="modal-icon">✓</div>
+
+      <h2 id="modalTitle">Success!</h2>
+
+      <p id="modalMessage"></p>
+
+      <button type="button" id="modalOk" class="modal-ok">
+        OK
+      </button>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
-
 </html>
